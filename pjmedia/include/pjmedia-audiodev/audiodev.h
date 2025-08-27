@@ -98,7 +98,6 @@ pjmedia_aud_register_factory(pjmedia_aud_dev_factory_create_func_ptr adf);
 PJ_DECL(pj_status_t)
 pjmedia_aud_unregister_factory(pjmedia_aud_dev_factory_create_func_ptr adf);
 
-
 /**
  * @}
  */

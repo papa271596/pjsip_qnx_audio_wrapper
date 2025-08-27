@@ -1,0 +1,17 @@
+doxygen/doxygen_new_line_after_brief=true
+doxygen/doxygen_use_brief_tag=false
+doxygen/doxygen_use_javadoc_tags=true
+doxygen/doxygen_use_pre_tag=false
+doxygen/doxygen_use_structural_commands=false
+eclipse.preferences.version=1
+environment/project/org.eclipse.linuxtools.cdt.autotools.core.toolChain.1801916940/PATH/delimiter=\:
+environment/project/org.eclipse.linuxtools.cdt.autotools.core.toolChain.1801916940/PATH/operation=append
+environment/project/org.eclipse.linuxtools.cdt.autotools.core.toolChain.1801916940/PATH/value=${QNX_HOST}/usr/bin\:${PATH}
+environment/project/org.eclipse.linuxtools.cdt.autotools.core.toolChain.1801916940/QNX_HOST/delimiter=\:
+environment/project/org.eclipse.linuxtools.cdt.autotools.core.toolChain.1801916940/QNX_HOST/operation=append
+environment/project/org.eclipse.linuxtools.cdt.autotools.core.toolChain.1801916940/QNX_HOST/value=QNX_HOST\=/home/pankaj/qnx710/host/linux/x86_64
+environment/project/org.eclipse.linuxtools.cdt.autotools.core.toolChain.1801916940/QNX_TARGET/delimiter=\:
+environment/project/org.eclipse.linuxtools.cdt.autotools.core.toolChain.1801916940/QNX_TARGET/operation=append
+environment/project/org.eclipse.linuxtools.cdt.autotools.core.toolChain.1801916940/QNX_TARGET/value=/home/pankaj/qnx710/target/qnx7
+environment/project/org.eclipse.linuxtools.cdt.autotools.core.toolChain.1801916940/append=true
+environment/project/org.eclipse.linuxtools.cdt.autotools.core.toolChain.1801916940/appendContributed=true

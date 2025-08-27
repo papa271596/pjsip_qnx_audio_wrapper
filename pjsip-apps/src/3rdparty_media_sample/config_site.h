@@ -2,6 +2,9 @@
  * Put this file in pjlib/include/pj
  */
 
+#include <pj/compat/os_qnx.h>
+
+
 /* sample configure command:
    CFLAGS="-g -Wno-unused-label" ./aconfigure --enable-ext-sound --disable-speex-aec --disable-g711-codec --disable-l16-codec --disable-gsm-codec --disable-g722-codec --disable-g7221-codec --disable-speex-codec --disable-ilbc-codec --disable-opencore-amrnb --disable-sdl --disable-ffmpeg --disable-v4l2
  */

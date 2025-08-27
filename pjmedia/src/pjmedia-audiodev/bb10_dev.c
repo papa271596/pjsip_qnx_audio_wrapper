@@ -29,6 +29,7 @@
 #include <pj/os.h>
 #include <pj/pool.h>
 #include <pjmedia/errno.h>
+#include <stdbool.h>
 
 #if defined(PJMEDIA_AUDIO_DEV_HAS_BB10) && PJMEDIA_AUDIO_DEV_HAS_BB10 != 0
 
@@ -45,7 +46,12 @@
 #include <errno.h>
 #include <sys/asoundlib.h>
 #if PJ_BBSDK_VER >= 0x100006
-#include <audio/audio_manager_routing.h>
+// #include <audio/audio_manager_routing.h>
+#endif
+
+/* Define AUDIO_TYPE_VOICE if not defined by the header */
+#ifndef AUDIO_TYPE_VOICE
+#define AUDIO_TYPE_VOICE 0
 #endif
 
 
@@ -176,12 +182,10 @@ static pj_status_t bb10_add_dev (struct bb10_factory *af)
 
     TRACE_((THIS_FILE, "bb10_add_dev Enter"));
 
-    if ((pb_result = audio_manager_snd_pcm_open_name(AUDIO_TYPE_VIDEO_CHAT,
-                                                     &pcm_handle,
-                                                     &handle,
-                                                     (char*)"voice",
-                                                     SND_PCM_OPEN_PLAYBACK))
-                                                     >= 0)
+    if ((pb_result = snd_pcm_open_name(&pcm_handle,                                                 
+                                        (char*)"voice",
+                                        SND_PCM_OPEN_PLAYBACK))
+                                        >= 0)
     {
         snd_pcm_close (pcm_handle);
         audio_manager_free_handle(handle);
@@ -189,12 +193,10 @@ static pj_status_t bb10_add_dev (struct bb10_factory *af)
         TRACE_((THIS_FILE, "Try to open the device for playback - failure"));
     }
 
-    if ((ca_result = audio_manager_snd_pcm_open_name(AUDIO_TYPE_VIDEO_CHAT,
-                                                     &pcm_handle,
-                                                     &handle,
-                                                     (char*)"voice",
-                                                     SND_PCM_OPEN_CAPTURE))
-                                                     >= 0)
+    if ((ca_result = snd_pcm_open_name(&pcm_handle,
+                                        (char*)"voice",
+                                        SND_PCM_OPEN_CAPTURE))
+                                        >= 0)
     {
         snd_pcm_close (pcm_handle);
         audio_manager_free_handle(handle);
@@ -706,18 +708,17 @@ static pj_status_t bb10_open_playback (struct bb10_stream *stream,
     /* Use the bb10 audio manager API to open as opposed to QNX core audio
      * Echo cancellation built in
      */
-    if ((ret = audio_manager_snd_pcm_open_name(
-            AUDIO_TYPE_VIDEO_CHAT,
-            &stream->pb_pcm, &stream->pb_audio_manager_handle,
+    if ((ret = snd_pcm_open_name(
+            &stream->pb_pcm,
             (char*)"voice",
             SND_PCM_OPEN_PLAYBACK)) < 0)
     {
-        TRACE_((THIS_FILE, "audio_manager_snd_pcm_open_name ret = %d", ret));
+        TRACE_((THIS_FILE, "snd_pcm_open_name ret = %d", ret));
         return PJMEDIA_EAUD_SYSERR;
     }
 
     /* Required call from January 2013 gold OS release */
-    snd_pcm_plugin_set_disable(stream->pb_pcm, PLUGIN_DISABLE_MMAP);
+    snd_pcm_plugin_set_disable(stream->pb_pcm, PLUGIN_MMAP);
 
     /* Required call from January 2013 gold OS release */
     snd_pcm_plugin_set_enable(stream->pb_pcm, PLUGIN_ROUTING);
@@ -804,17 +805,15 @@ static pj_status_t bb10_open_capture (struct bb10_stream *stream,
 
     PJ_ASSERT_RETURN(param->bits_per_sample == 16, PJMEDIA_EAUD_SAMPFORMAT);
 
-    if ((ret=audio_manager_snd_pcm_open_name(AUDIO_TYPE_VIDEO_CHAT,
-                                             &stream->ca_pcm,
-                                             &stream->ca_audio_manager_handle,
-                                             (char*)"voice",
-                                             SND_PCM_OPEN_CAPTURE)) < 0)
+    if ((ret=snd_pcm_open_name(&stream->ca_pcm,
+                                    (char*)"voice",
+                                    SND_PCM_OPEN_CAPTURE)) < 0)
     {
-        TRACE_((THIS_FILE, "audio_manager_snd_pcm_open_name ret = %d", ret));
+        TRACE_((THIS_FILE, "snd_pcm_open_name ret = %d", ret));
         return PJMEDIA_EAUD_SYSERR;
     }
     /* Required call from January 2013 gold OS release */
-    snd_pcm_plugin_set_disable (stream->ca_pcm, PLUGIN_DISABLE_MMAP);
+    snd_pcm_plugin_set_disable (stream->ca_pcm, PLUGIN_MMAP);
 
     /* Required call from January 2013 gold OS release */
     snd_pcm_plugin_set_enable(stream->ca_pcm, PLUGIN_ROUTING);

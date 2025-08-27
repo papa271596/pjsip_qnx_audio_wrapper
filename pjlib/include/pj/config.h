@@ -51,6 +51,16 @@
 #  error "PJ_ALIGN_DATA is not defined!"
 #endif
 
+/* To test with qnx_test_harness.c */
+
+#if defined(PJ_QNX)
+#  include <pj/compat/os_qnx.h>
+#endif
+#ifndef PJ_CONFIG_PLATFORM_H
+#   error "Please specify target os."
+#endif
+
+
 /********************************************************************
  * Include target OS specific configuration.
  */

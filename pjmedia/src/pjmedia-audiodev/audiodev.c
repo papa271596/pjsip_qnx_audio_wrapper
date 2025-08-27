@@ -79,6 +79,10 @@ pjmedia_aud_dev_factory* pjmedia_wasapi_factory(pj_pool_factory *pf);
 pjmedia_aud_dev_factory* pjmedia_null_audio_factory(pj_pool_factory *pf);
 #endif
 
+#if PJMEDIA_AUDIO_DEV_HAS_QNX
+pjmedia_aud_dev_factory* pjmedia_qnx_factory(pj_pool_factory *pf);
+#endif
+
 
 /* API: Initialize the audio subsystem. */
 PJ_DEF(pj_status_t) pjmedia_aud_subsys_init(pj_pool_factory *pf)

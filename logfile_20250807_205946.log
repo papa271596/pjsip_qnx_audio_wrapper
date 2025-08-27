@@ -1,0 +1,190 @@
+for dir in pjlib/build pjlib-util/build pjnath/build third_party/build pjmedia/build pjsip/build pjsip-apps/build ; do \
+	if make  -C $dir all; then \
+	    true; \
+	else \
+	    exit 1; \
+	fi; \
+done
+make[1]: Entering directory '/home/pankaj/workspace/audio_wrapper/pjproject/pjlib/build'
+make -f /home/pankaj/workspace/audio_wrapper/pjproject/build/rules.mak APP=PJLIB app=pjlib ../lib/libpj-x86_64-pc-nto-qnx.a
+make[2]: Entering directory '/home/pankaj/workspace/audio_wrapper/pjproject/pjlib/build'
+make[2]: '../lib/libpj-x86_64-pc-nto-qnx.a' is up to date.
+make[2]: Leaving directory '/home/pankaj/workspace/audio_wrapper/pjproject/pjlib/build'
+make -f /home/pankaj/workspace/audio_wrapper/pjproject/build/rules.mak APP=PJLIB app=pjlib ../lib/libpj.so
+make[2]: Entering directory '/home/pankaj/workspace/audio_wrapper/pjproject/pjlib/build'
+make[2]: '../lib/libpj.so' is up to date.
+make[2]: Leaving directory '/home/pankaj/workspace/audio_wrapper/pjproject/pjlib/build'
+make -f /home/pankaj/workspace/audio_wrapper/pjproject/build/rules.mak APP=TEST app=pjlib-test ../bin/pjlib-test-x86_64-pc-nto-qnx
+make[2]: Entering directory '/home/pankaj/workspace/audio_wrapper/pjproject/pjlib/build'
+make[2]: '../bin/pjlib-test-x86_64-pc-nto-qnx' is up to date.
+make[2]: Leaving directory '/home/pankaj/workspace/audio_wrapper/pjproject/pjlib/build'
+make[1]: Leaving directory '/home/pankaj/workspace/audio_wrapper/pjproject/pjlib/build'
+make[1]: Entering directory '/home/pankaj/workspace/audio_wrapper/pjproject/pjlib-util/build'
+make -f /home/pankaj/workspace/audio_wrapper/pjproject/build/rules.mak APP=PJLIB_UTIL app=pjlib-util ../lib/libpjlib-util-x86_64-pc-nto-qnx.a
+make[2]: Entering directory '/home/pankaj/workspace/audio_wrapper/pjproject/pjlib-util/build'
+make[2]: '../lib/libpjlib-util-x86_64-pc-nto-qnx.a' is up to date.
+make[2]: Leaving directory '/home/pankaj/workspace/audio_wrapper/pjproject/pjlib-util/build'
+make -f /home/pankaj/workspace/audio_wrapper/pjproject/build/rules.mak APP=PJLIB_UTIL app=pjlib-util ../lib/libpjlib-util.so
+make[2]: Entering directory '/home/pankaj/workspace/audio_wrapper/pjproject/pjlib-util/build'
+make[2]: '../lib/libpjlib-util.so' is up to date.
+make[2]: Leaving directory '/home/pankaj/workspace/audio_wrapper/pjproject/pjlib-util/build'
+make -f /home/pankaj/workspace/audio_wrapper/pjproject/build/rules.mak APP=UTIL_TEST app=pjlib-util-test ../bin/pjlib-util-test-x86_64-pc-nto-qnx
+make[2]: Entering directory '/home/pankaj/workspace/audio_wrapper/pjproject/pjlib-util/build'
+make[2]: '../bin/pjlib-util-test-x86_64-pc-nto-qnx' is up to date.
+make[2]: Leaving directory '/home/pankaj/workspace/audio_wrapper/pjproject/pjlib-util/build'
+make[1]: Leaving directory '/home/pankaj/workspace/audio_wrapper/pjproject/pjlib-util/build'
+make[1]: Entering directory '/home/pankaj/workspace/audio_wrapper/pjproject/pjnath/build'
+make -f /home/pankaj/workspace/audio_wrapper/pjproject/build/rules.mak APP=PJNATH app=pjnath ../lib/libpjnath-x86_64-pc-nto-qnx.a
+make[2]: Entering directory '/home/pankaj/workspace/audio_wrapper/pjproject/pjnath/build'
+make[2]: '../lib/libpjnath-x86_64-pc-nto-qnx.a' is up to date.
+make[2]: Leaving directory '/home/pankaj/workspace/audio_wrapper/pjproject/pjnath/build'
+make -f /home/pankaj/workspace/audio_wrapper/pjproject/build/rules.mak APP=PJNATH app=pjnath ../lib/libpjnath.so
+make[2]: Entering directory '/home/pankaj/workspace/audio_wrapper/pjproject/pjnath/build'
+make[2]: '../lib/libpjnath.so' is up to date.
+make[2]: Leaving directory '/home/pankaj/workspace/audio_wrapper/pjproject/pjnath/build'
+make -f /home/pankaj/workspace/audio_wrapper/pjproject/build/rules.mak APP=PJNATH_TEST app=pjnath-test ../bin/pjnath-test-x86_64-pc-nto-qnx
+make -f /home/pankaj/workspace/audio_wrapper/pjproject/build/rules.mak APP=PJTURN_CLIENT app=pjturn-client ../bin/pjturn-client-x86_64-pc-nto-qnx
+make -f /home/pankaj/workspace/audio_wrapper/pjproject/build/rules.mak APP=PJTURN_SRV app=pjturn-srv ../bin/pjturn-srv-x86_64-pc-nto-qnx
+make[2]: Entering directory '/home/pankaj/workspace/audio_wrapper/pjproject/pjnath/build'
+make[2]: '../bin/pjturn-client-x86_64-pc-nto-qnx' is up to date.
+make[2]: Leaving directory '/home/pankaj/workspace/audio_wrapper/pjproject/pjnath/build'
+make[2]: Entering directory '/home/pankaj/workspace/audio_wrapper/pjproject/pjnath/build'
+make[2]: '../bin/pjturn-srv-x86_64-pc-nto-qnx' is up to date.
+make[2]: Leaving directory '/home/pankaj/workspace/audio_wrapper/pjproject/pjnath/build'
+make[2]: Entering directory '/home/pankaj/workspace/audio_wrapper/pjproject/pjnath/build'
+make[2]: '../bin/pjnath-test-x86_64-pc-nto-qnx' is up to date.
+make[2]: Leaving directory '/home/pankaj/workspace/audio_wrapper/pjproject/pjnath/build'
+make[1]: Leaving directory '/home/pankaj/workspace/audio_wrapper/pjproject/pjnath/build'
+make[1]: Entering directory '/home/pankaj/workspace/audio_wrapper/pjproject/third_party/build'
+for dir in  gsm ilbc speex g7221 srtp resample yuv; do \
+	if make  -C $dir all; then \
+	    true; \
+	else \
+	    exit 1; \
+	fi; \
+done
+make[2]: Entering directory '/home/pankaj/workspace/audio_wrapper/pjproject/third_party/build/gsm'
+make -f /home/pankaj/workspace/audio_wrapper/pjproject/build/rules.mak APP=GSM_CODEC app=libgsmcodec ../../lib/libgsmcodec-x86_64-pc-nto-qnx.a
+make[3]: Entering directory '/home/pankaj/workspace/audio_wrapper/pjproject/third_party/build/gsm'
+make[3]: '../../lib/libgsmcodec-x86_64-pc-nto-qnx.a' is up to date.
+make[3]: Leaving directory '/home/pankaj/workspace/audio_wrapper/pjproject/third_party/build/gsm'
+make -f /home/pankaj/workspace/audio_wrapper/pjproject/build/rules.mak APP=GSM_CODEC app=libgsmcodec ../../lib/libgsmcodec.so
+make[3]: Entering directory '/home/pankaj/workspace/audio_wrapper/pjproject/third_party/build/gsm'
+make[3]: '../../lib/libgsmcodec.so' is up to date.
+make[3]: Leaving directory '/home/pankaj/workspace/audio_wrapper/pjproject/third_party/build/gsm'
+make[2]: Leaving directory '/home/pankaj/workspace/audio_wrapper/pjproject/third_party/build/gsm'
+make[2]: Entering directory '/home/pankaj/workspace/audio_wrapper/pjproject/third_party/build/ilbc'
+make -f /home/pankaj/workspace/audio_wrapper/pjproject/build/rules.mak APP=ILBC app=libilbccodec ../../lib/libilbccodec-x86_64-pc-nto-qnx.a
+make[3]: Entering directory '/home/pankaj/workspace/audio_wrapper/pjproject/third_party/build/ilbc'
+make[3]: '../../lib/libilbccodec-x86_64-pc-nto-qnx.a' is up to date.
+make[3]: Leaving directory '/home/pankaj/workspace/audio_wrapper/pjproject/third_party/build/ilbc'
+make -f /home/pankaj/workspace/audio_wrapper/pjproject/build/rules.mak APP=ILBC app=libilbccodec ../../lib/libilbccodec.so
+make[3]: Entering directory '/home/pankaj/workspace/audio_wrapper/pjproject/third_party/build/ilbc'
+make[3]: '../../lib/libilbccodec.so' is up to date.
+make[3]: Leaving directory '/home/pankaj/workspace/audio_wrapper/pjproject/third_party/build/ilbc'
+make[2]: Leaving directory '/home/pankaj/workspace/audio_wrapper/pjproject/third_party/build/ilbc'
+make[2]: Entering directory '/home/pankaj/workspace/audio_wrapper/pjproject/third_party/build/speex'
+make -f /home/pankaj/workspace/audio_wrapper/pjproject/build/rules.mak APP=SPEEX app=libspeex ../../lib/libspeex-x86_64-pc-nto-qnx.a
+make[3]: Entering directory '/home/pankaj/workspace/audio_wrapper/pjproject/third_party/build/speex'
+make[3]: '../../lib/libspeex-x86_64-pc-nto-qnx.a' is up to date.
+make[3]: Leaving directory '/home/pankaj/workspace/audio_wrapper/pjproject/third_party/build/speex'
+make -f /home/pankaj/workspace/audio_wrapper/pjproject/build/rules.mak APP=SPEEX app=libspeex ../../lib/libspeex.so
+make[3]: Entering directory '/home/pankaj/workspace/audio_wrapper/pjproject/third_party/build/speex'
+make[3]: '../../lib/libspeex.so' is up to date.
+make[3]: Leaving directory '/home/pankaj/workspace/audio_wrapper/pjproject/third_party/build/speex'
+make[2]: Leaving directory '/home/pankaj/workspace/audio_wrapper/pjproject/third_party/build/speex'
+make[2]: Entering directory '/home/pankaj/workspace/audio_wrapper/pjproject/third_party/build/g7221'
+make -f /home/pankaj/workspace/audio_wrapper/pjproject/build/rules.mak APP=G7221_CODEC app=libg7221codec ../../lib/libg7221codec-x86_64-pc-nto-qnx.a
+make[3]: Entering directory '/home/pankaj/workspace/audio_wrapper/pjproject/third_party/build/g7221'
+make[3]: '../../lib/libg7221codec-x86_64-pc-nto-qnx.a' is up to date.
+make[3]: Leaving directory '/home/pankaj/workspace/audio_wrapper/pjproject/third_party/build/g7221'
+make -f /home/pankaj/workspace/audio_wrapper/pjproject/build/rules.mak APP=G7221_CODEC app=libg7221codec ../../lib/libg7221codec.so
+make[3]: Entering directory '/home/pankaj/workspace/audio_wrapper/pjproject/third_party/build/g7221'
+make[3]: '../../lib/libg7221codec.so' is up to date.
+make[3]: Leaving directory '/home/pankaj/workspace/audio_wrapper/pjproject/third_party/build/g7221'
+make[2]: Leaving directory '/home/pankaj/workspace/audio_wrapper/pjproject/third_party/build/g7221'
+make[2]: Entering directory '/home/pankaj/workspace/audio_wrapper/pjproject/third_party/build/srtp'
+make -f /home/pankaj/workspace/audio_wrapper/pjproject/build/rules.mak APP=SRTP app=libsrtp ../../lib/libsrtp-x86_64-pc-nto-qnx.a
+make[3]: Entering directory '/home/pankaj/workspace/audio_wrapper/pjproject/third_party/build/srtp'
+make[3]: '../../lib/libsrtp-x86_64-pc-nto-qnx.a' is up to date.
+make[3]: Leaving directory '/home/pankaj/workspace/audio_wrapper/pjproject/third_party/build/srtp'
+make -f /home/pankaj/workspace/audio_wrapper/pjproject/build/rules.mak APP=SRTP app=libsrtp ../../lib/libsrtp.so
+make[3]: Entering directory '/home/pankaj/workspace/audio_wrapper/pjproject/third_party/build/srtp'
+make[3]: '../../lib/libsrtp.so' is up to date.
+make[3]: Leaving directory '/home/pankaj/workspace/audio_wrapper/pjproject/third_party/build/srtp'
+make[2]: Leaving directory '/home/pankaj/workspace/audio_wrapper/pjproject/third_party/build/srtp'
+make[2]: Entering directory '/home/pankaj/workspace/audio_wrapper/pjproject/third_party/build/resample'
+make -f /home/pankaj/workspace/audio_wrapper/pjproject/build/rules.mak APP=RESAMPLE app=libresample ../../lib/libresample-x86_64-pc-nto-qnx.a
+make[3]: Entering directory '/home/pankaj/workspace/audio_wrapper/pjproject/third_party/build/resample'
+make[3]: '../../lib/libresample-x86_64-pc-nto-qnx.a' is up to date.
+make[3]: Leaving directory '/home/pankaj/workspace/audio_wrapper/pjproject/third_party/build/resample'
+make -f /home/pankaj/workspace/audio_wrapper/pjproject/build/rules.mak APP=RESAMPLE app=libresample ../../lib/libresample.so
+make[3]: Entering directory '/home/pankaj/workspace/audio_wrapper/pjproject/third_party/build/resample'
+make[3]: '../../lib/libresample.so' is up to date.
+make[3]: Leaving directory '/home/pankaj/workspace/audio_wrapper/pjproject/third_party/build/resample'
+make[2]: Leaving directory '/home/pankaj/workspace/audio_wrapper/pjproject/third_party/build/resample'
+make[2]: Entering directory '/home/pankaj/workspace/audio_wrapper/pjproject/third_party/build/yuv'
+make -f /home/pankaj/workspace/audio_wrapper/pjproject/build/rules.mak APP=YUV app=libyuv ../../lib/libyuv-x86_64-pc-nto-qnx.a
+make[3]: Entering directory '/home/pankaj/workspace/audio_wrapper/pjproject/third_party/build/yuv'
+make[3]: '../../lib/libyuv-x86_64-pc-nto-qnx.a' is up to date.
+make[3]: Leaving directory '/home/pankaj/workspace/audio_wrapper/pjproject/third_party/build/yuv'
+make -f /home/pankaj/workspace/audio_wrapper/pjproject/build/rules.mak APP=YUV app=libyuv ../../lib/libyuv.so
+make[3]: Entering directory '/home/pankaj/workspace/audio_wrapper/pjproject/third_party/build/yuv'
+make[3]: '../../lib/libyuv.so' is up to date.
+make[3]: Leaving directory '/home/pankaj/workspace/audio_wrapper/pjproject/third_party/build/yuv'
+make[2]: Leaving directory '/home/pankaj/workspace/audio_wrapper/pjproject/third_party/build/yuv'
+make[1]: Leaving directory '/home/pankaj/workspace/audio_wrapper/pjproject/third_party/build'
+make[1]: Entering directory '/home/pankaj/workspace/audio_wrapper/pjproject/pjmedia/build'
+make -f /home/pankaj/workspace/audio_wrapper/pjproject/build/rules.mak APP=PJMEDIA app=pjmedia ../lib/libpjmedia-x86_64-pc-nto-qnx.a
+make[2]: Entering directory '/home/pankaj/workspace/audio_wrapper/pjproject/pjmedia/build'
+make[2]: '../lib/libpjmedia-x86_64-pc-nto-qnx.a' is up to date.
+make[2]: Leaving directory '/home/pankaj/workspace/audio_wrapper/pjproject/pjmedia/build'
+make -f /home/pankaj/workspace/audio_wrapper/pjproject/build/rules.mak APP=PJMEDIA app=pjmedia ../lib/libpjmedia.so
+make[2]: Entering directory '/home/pankaj/workspace/audio_wrapper/pjproject/pjmedia/build'
+make[2]: '../lib/libpjmedia.so' is up to date.
+make[2]: Leaving directory '/home/pankaj/workspace/audio_wrapper/pjproject/pjmedia/build'
+make -f /home/pankaj/workspace/audio_wrapper/pjproject/build/rules.mak APP=PJMEDIA_CODEC app=pjmedia-codec ../lib/libpjmedia-codec-x86_64-pc-nto-qnx.a
+make -f /home/pankaj/workspace/audio_wrapper/pjproject/build/rules.mak APP=PJMEDIA_VIDEODEV app=pjmedia-videodev ../lib/libpjmedia-videodev-x86_64-pc-nto-qnx.a
+make -f /home/pankaj/workspace/audio_wrapper/pjproject/build/rules.mak APP=PJMEDIA_AUDIODEV app=pjmedia-audiodev ../lib/libpjmedia-audiodev-x86_64-pc-nto-qnx.a
+make -f /home/pankaj/workspace/audio_wrapper/pjproject/build/rules.mak APP=PJSDP app=pjsdp ../lib/libpjsdp-x86_64-pc-nto-qnx.a
+make[2]: Entering directory '/home/pankaj/workspace/audio_wrapper/pjproject/pjmedia/build'
+make[2]: '../lib/libpjsdp-x86_64-pc-nto-qnx.a' is up to date.
+make[2]: Leaving directory '/home/pankaj/workspace/audio_wrapper/pjproject/pjmedia/build'
+make[2]: Entering directory '/home/pankaj/workspace/audio_wrapper/pjproject/pjmedia/build'
+make[2]: '../lib/libpjmedia-videodev-x86_64-pc-nto-qnx.a' is up to date.
+make[2]: Leaving directory '/home/pankaj/workspace/audio_wrapper/pjproject/pjmedia/build'
+make -f /home/pankaj/workspace/audio_wrapper/pjproject/build/rules.mak APP=PJSDP app=pjsdp ../lib/libpjsdp.so
+make -f /home/pankaj/workspace/audio_wrapper/pjproject/build/rules.mak APP=PJMEDIA_VIDEODEV app=pjmedia-videodev ../lib/libpjmedia-videodev.so
+make[2]: Entering directory '/home/pankaj/workspace/audio_wrapper/pjproject/pjmedia/build'
+x86_64-pc-nto-qnx7.1.0-gcc -Wall -DPJ_AUTOCONF=1 -fPIC -fPIC -DPJ_CONFIG_QNX=1 -DPJMEDIA_AUDIO_DEV_HAS_QNX=1 -Wno-int-to-pointer-cast -DWEBRTC_ARCH_ARM -DWEBRTC_DISABLE_CPU_DETECTION -DPJ_IS_BIG_ENDIAN=0 -DPJ_IS_LITTLE_ENDIAN=1 -fPIC   -fPIC           -I/home/pankaj/workspace/audio_wrapper/pjproject/third_party/build/speex -I/home/pankaj/workspace/audio_wrapper/pjproject/third_party/speex/include -DPJMEDIA_HAS_OPENCORE_AMRNB_CODEC=0 -DPJMEDIA_HAS_OPENCORE_AMRWB_CODEC=0 -DPJMEDIA_HAS_LYRA_CODEC=0 -I/home/pankaj/workspace/audio_wrapper/pjproject/third_party/build/srtp -I/home/pankaj/workspace/audio_wrapper/pjproject/third_party/srtp/crypto/include -I/home/pankaj/workspace/audio_wrapper/pjproject/third_party/srtp/include -DPJMEDIA_RESAMPLE_IMP=PJMEDIA_RESAMPLE_LIBRESAMPLE -DPJMEDIA_HAS_LIBYUV=1 -I/home/pankaj/workspace/audio_wrapper/pjproject/third_party/yuv/include -DPJMEDIA_HAS_WEBRTC_AEC=0 -DPJMEDIA_HAS_WEBRTC_AEC3=0 -DPJMEDIA_AUDIO_DEV_HAS_WMME=0 -DPJMEDIA_AUDIO_DEV_HAS_PORTAUDIO=0 -DPJMEDIA_AUDIO_DEV_HAS_WMME=0 -I../include -I../../pjlib/include -I../../pjlib-util/include -I../../pjmedia/include -I../../pjnath/include -I../.. \
+	-c -o output/pjmedia-audiodev-x86_64-pc-nto-qnx/qnx_dev.o \
+	../src/pjmedia-audiodev/qnx_dev.c 
+make[2]: Entering directory '/home/pankaj/workspace/audio_wrapper/pjproject/pjmedia/build'
+make[2]: '../lib/libpjsdp.so' is up to date.
+make[2]: Leaving directory '/home/pankaj/workspace/audio_wrapper/pjproject/pjmedia/build'
+make[2]: Entering directory '/home/pankaj/workspace/audio_wrapper/pjproject/pjmedia/build'
+make[2]: '../lib/libpjmedia-codec-x86_64-pc-nto-qnx.a' is up to date.
+make[2]: Leaving directory '/home/pankaj/workspace/audio_wrapper/pjproject/pjmedia/build'
+make -f /home/pankaj/workspace/audio_wrapper/pjproject/build/rules.mak APP=PJMEDIA_CODEC app=pjmedia-codec ../lib/libpjmedia-codec.so
+make[2]: Entering directory '/home/pankaj/workspace/audio_wrapper/pjproject/pjmedia/build'
+make[2]: '../lib/libpjmedia-videodev.so' is up to date.
+make[2]: Leaving directory '/home/pankaj/workspace/audio_wrapper/pjproject/pjmedia/build'
+make[2]: Entering directory '/home/pankaj/workspace/audio_wrapper/pjproject/pjmedia/build'
+make[2]: '../lib/libpjmedia-codec.so' is up to date.
+make[2]: Leaving directory '/home/pankaj/workspace/audio_wrapper/pjproject/pjmedia/build'
+../src/pjmedia-audiodev/qnx_dev.c: In function 'qnx_stream_set_cap':
+../src/pjmedia-audiodev/qnx_dev.c:1007:13: error: too many arguments to function 'snd_mixer_element_write'
+         if (snd_mixer_element_write(handle, SND_MIXER_CHN_FRONT_LEFT, vol) < 0) {
+             ^~~~~~~~~~~~~~~~~~~~~~~
+In file included from ../src/pjmedia-audiodev/qnx_dev.c:39:
+/home/pankaj/qnx710/target/qnx7/usr/include/sys/asoundlib.h:164:5: note: declared here
+ int snd_mixer_element_write(snd_mixer_t *handle, snd_mixer_element_t * element);
+     ^~~~~~~~~~~~~~~~~~~~~~~
+/home/pankaj/workspace/audio_wrapper/pjproject/build/rules.mak:163: recipe for target 'output/pjmedia-audiodev-x86_64-pc-nto-qnx/qnx_dev.o' failed
+make[2]: *** [output/pjmedia-audiodev-x86_64-pc-nto-qnx/qnx_dev.o] Error 1
+make[2]: Leaving directory '/home/pankaj/workspace/audio_wrapper/pjproject/pjmedia/build'
+Makefile:234: recipe for target 'libpjmedia-audiodev-x86_64-pc-nto-qnx.a' failed
+make[1]: *** [libpjmedia-audiodev-x86_64-pc-nto-qnx.a] Error 2
+make[1]: Leaving directory '/home/pankaj/workspace/audio_wrapper/pjproject/pjmedia/build'
+Makefile:14: recipe for target 'all' failed
+make: *** [all] Error 1
