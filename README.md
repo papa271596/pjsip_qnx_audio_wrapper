@@ -69,16 +69,20 @@ Table of contents:
 
 # QNX Audio Wrapper for PJSIP
 ## Documentation
-It's a sound Wrapper for PJSIP on QNX, the alsa_dev.c file is altereted to qnx_dev.c in order to make audio work on QNX. THe PJSIP project i.e. pjproject can be cross compiled for QNX as mentioned below.
-Install QNX SDP and QNXd710 and activate the QNX license, qnxsdp-env.sh is the shell script to set QNX Enviroment varirable.
-Execute source ../../qnx710/qnxsdp-env.sh
-To configure and setup the PJSIP project (or similar autotools-based project) to be cross-compiled for QNX 7.1 using the QNX toolchain and to cross compile the same, execute below set of commands.
-	make distclean
-	export OS_NAME=qnx
-	export CFLAGS="-fPIC"
-	export CXXFLAGS="-fPIC"
-	./configure-qnx --host=x86_64-pc-nto-qnx7.1.0  LD=q++ --disable-libwebrtc --prefix=$HOME/qnx_pjsip
-	make dep -j6
-	make -j6 (for detailed log you can also execute make V=1 -j6 > "logfile_$(date +'%Y%m%d_%H%M%S').log" 2>&1)
-On successful compilation, build the pjsip project for cross compiled QNX Audio Wrapper
-	make install
+It's a sound Wrapper for PJSIP on QNX, the alsa_dev.c file is altered to qnx_dev.c in order to make audio work on QNX. The PJSIP project i.e. pjproject can be cross compiled for QNX as mentioned below.
+
+Install QNX SDP and QNXd710 and activate the QNX license, qnxsdp-env.sh is the shell script to set QNX Enviroment variable.
+ - source ../../qnx710/qnxsdp-env.sh
+
+ 
+ To configure and setup the PJSIP project (or similar autotools-based project) to be cross-compiled for QNX 7.1 using the QNX toolchain and to cross compile the same, execute below set of commands,
+ - make distclean
+ - export OS_NAME=qnx
+ - export CFLAGS="-fPIC"
+ - export CXXFLAGS="-fPIC"
+ - ./configure-qnx --host=x86_64-pc-nto-qnx7.1.0  LD=q++ --disable-libwebrtc --prefix=$HOME/qnx_pjsip
+ - make dep -j6
+ - make -j6 (for detailed log you can also execute make V=1 -j6 > "logfile_$(date +'%Y%m%d_%H%M%S').log" 2>&1)
+ 
+ On successful compilation, build the pjsip project for cross compiled QNX Audio Wrapper
+ - make install
