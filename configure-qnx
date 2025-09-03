@@ -34,9 +34,11 @@ if test "$CFLAGS" = ""; then
 fi
 export CFLAGS="$CFLAGS -fPIC -DPJ_QNX=1 -DPJ_CONFIG_QNX=1 -DPJMEDIA_AUDIO_DEV_HAS_QNX=1 -Wno-int-to-pointer-cast"
 export CFLAGS="$CFLAGS -DWEBRTC_DISABLE_CPU_DETECTION"
+export CFLAGS="$CFLAGS -I${QNX_TARGET}/usr/include"
+
 
 # Run configure
-./configure --host=${TARGET_HOST} --disable-oss "$@"
+./configure --host=${TARGET_HOST} --host=x86_64-pc-nto-qnx7.1.0  LD=q++ --disable-libwebrtc --prefix=$HOME/qnx_pjsip "$@"
 RETVAL=$?
 
 # Write to pjsip.pri only if configure was successful

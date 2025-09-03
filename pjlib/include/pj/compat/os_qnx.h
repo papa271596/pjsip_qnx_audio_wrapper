@@ -1,6 +1,11 @@
 #ifndef __PJ_COMPAT_OS_QNX_H__
 #define __PJ_COMPAT_OS_QNX_H__
 
+#ifndef PJ_CONFIG_PLATFORM_H
+#define PJ_CONFIG_PLATFORM_H <pj/compat/os_qnx.h>
+#endif
+
+
 #define PJ_OS_NAME                     "qnx"
 #define PJ_HAS_HIGH_RES_TIMER         1
 #define PJ_EMULATE_RWMUTEX            1

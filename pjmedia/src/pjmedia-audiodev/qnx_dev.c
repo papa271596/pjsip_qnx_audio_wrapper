@@ -17,9 +17,9 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-#include <pjmedia_audiodev.h>
 #include <pj/assert.h>
 #include <pj/log.h>
+#include <pj/types.h>
 #include <pj/os.h>
 #include <pj/pool.h>
 #include <pjmedia/errno.h>
@@ -29,7 +29,6 @@
 #if defined(PJMEDIA_AUDIO_DEV_HAS_QNX) && PJMEDIA_AUDIO_DEV_HAS_QNX
 
 // #include <sys/syscall.h>
-// #include "qnx_alsa_wrapper.h" // Include the QNX ALSA wrapper header
 #include <sys/time.h>
 #include <sys/neutrino.h>
 #include <sys/types.h>
@@ -37,7 +36,6 @@
 #include <sys/select.h>
 #include <pthread.h>
 #include <errno.h>
-// #include <sys/asoundlib.h>
 
 
 #define THIS_FILE                       "qnx_dev.c"
@@ -112,54 +110,6 @@ struct qnx_factory
 
 static pjmedia_aud_dev_factory *default_factory;
 
-struct qnx_stream
-{
-    pjmedia_aud_stream   base;
-
-    /* Common */
-    pj_pool_t           *pool;
-    struct qnx_factory *af;
-    void                *user_data;
-    pjmedia_aud_param    param;         /* Running parameter            */
-    int                  rec_id;        /* Capture device id            */
-    int                  quit;
-
-    /* Playback */
-    snd_pcm_t           *pb_pcm;
-    qnx_snd_pcm_uframes_t    pb_frames;     /* samples_per_frame            */
-    pjmedia_aud_play_cb  pb_cb;
-    unsigned             pb_buf_size;
-    pj_uint8_t          *pb_buf;
-    pj_thread_t         *pb_thread;
-
-    /* Capture */
-    snd_pcm_t           *ca_pcm;
-    qnx_snd_pcm_uframes_t    ca_frames;     /* samples_per_frame            */
-    pjmedia_aud_rec_cb   ca_cb;
-    unsigned             ca_buf_size;
-    pj_uint8_t          *ca_buf;
-    pj_thread_t         *ca_thread;
-    
-
-    // QNX specific
-    qnx_dev_id pb_dev_id;  // Playback device ID
-    qnx_dev_id ca_dev_id;  // Capture device ID
-    
-    snd_pcm_t *pcm_handle;
-
-    unsigned input_vol;
-    unsigned output_vol;
-    pjmedia_aud_dev_route input_route;
-    pjmedia_aud_dev_route output_route;
-
-
-    
-    int frame_count;              // Number of frames per buffer
-    pjmedia_port *port;          // PJSIP media port
-
-
-};
-
 static pjmedia_aud_dev_factory_op qnx_factory_op =
 {
     &qnx_factory_init,
@@ -206,7 +156,7 @@ static pj_status_t qnx_factory_init(pjmedia_aud_dev_factory *f)
     if (!default_factory)
         default_factory = f;
 
-    PJ_LOG(4,(THIS_FILE, "ALSA initialized"));
+    PJ_LOG(4,(THIS_FILE, "QNX Sound Architecture QSA initialized"));
     return PJ_SUCCESS;
 }
 
@@ -248,9 +198,9 @@ static pj_status_t qnx_factory_refresh(pjmedia_aud_dev_factory *f)
     PJ_LOG(4, ("qnx_dev", "Enumerating QSA PCM devices using preferred open"));
 
     // Try opening a few devices in playback and capture mode
-    for (int mode = SND_PCM_OPEN_PLAYBACK; mode <= SND_PCM_OPEN_CAPTURE; ++mode)
+    for (int mode = QNX_SND_PCM_STREAM_PLAYBACK; mode <= QNX_SND_PCM_STREAM_CAPTURE; ++mode)
     {
-        snd_pcm_t *pcm_handle;
+        qnx_snd_pcm_t *pcm_handle;
         snd_pcm_info_t pcm_info;
         int card = -1;
         int device = -1;
@@ -266,13 +216,13 @@ static pj_status_t qnx_factory_refresh(pjmedia_aud_dev_factory *f)
                 pj_ansi_snprintf(info->name, sizeof(info->name),
                                  "QNX PCM Card %d Device %d (%s)",
                                  card, device,
-                                 (mode == SND_PCM_OPEN_PLAYBACK ? "Playback" : "Capture"));
+                                 (mode == QNX_SND_PCM_STREAM_PLAYBACK ? "Playback" : "Capture"));
                 pj_ansi_strcpy(info->driver, "QSA");
 
-                info->input_count = (mode == SND_PCM_OPEN_CAPTURE) ? 1 : 0;
-                info->output_count = (mode == SND_PCM_OPEN_PLAYBACK) ? 1 : 0;
+                info->input_count = (mode == QNX_SND_PCM_STREAM_CAPTURE) ? 1 : 0;
+                info->output_count = (mode == QNX_SND_PCM_STREAM_PLAYBACK) ? 1 : 0;
                 info->caps = PJMEDIA_AUD_DEV_CAP_EXT_FORMAT |
-             ((mode == SND_PCM_OPEN_CAPTURE) ? PJMEDIA_AUD_DEV_CAP_INPUT_ROUTE : PJMEDIA_AUD_DEV_CAP_OUTPUT_ROUTE);
+             ((mode == QNX_SND_PCM_STREAM_CAPTURE) ? PJMEDIA_AUD_DEV_CAP_INPUT_ROUTE : PJMEDIA_AUD_DEV_CAP_OUTPUT_ROUTE);
 
                 dev_index++;
             }
@@ -363,7 +313,7 @@ static int pb_thread_func (void *arg)
     struct qnx_stream *stream = (struct qnx_stream*)arg;
     #define BYTES_PER_FRAME (stream->pb_frames * sizeof(pj_int16_t))
 
-    snd_pcm_t *pcm = stream->pb_pcm;
+    qnx_snd_pcm_t *pcm = stream->pb_pcm;
     pj_uint8_t *buf = stream->pb_buf;
     int nframes = stream->frame_count;
     
@@ -450,7 +400,7 @@ static int ca_thread_func (void *arg)
     struct qnx_stream *stream = (struct qnx_stream*)arg;
     #define BYTES_PER_CA_FRAME (stream->ca_frames * sizeof(pj_int16_t))
 
-    snd_pcm_t *pcm = stream->ca_pcm;
+    qnx_snd_pcm_t *pcm = stream->ca_pcm;
     pj_uint8_t *buf = stream->ca_buf;
     int nframes = stream->frame_count;
     int size = stream->ca_buf_size;
@@ -516,7 +466,7 @@ static pj_status_t open_playback(struct qnx_stream *stream,
 
     // Open PCM playback device
     result = snd_pcm_open(&stream->pb_pcm, stream->pb_dev_id.card,
-                          stream->pb_dev_id.device, SND_PCM_OPEN_PLAYBACK);
+                          stream->pb_dev_id.device, QNX_SND_PCM_STREAM_PLAYBACK);
     if (result < 0) {
         TRACE_((THIS_FILE, "Failed to open playback device"));
         return PJMEDIA_EAUD_SYSERR;
@@ -560,7 +510,7 @@ static pj_status_t open_capture(struct qnx_stream *stream,
 
     // Open PCM capture device
     result = snd_pcm_open(&stream->ca_pcm, stream->ca_dev_id.card,
-                          stream->ca_dev_id.device, SND_PCM_OPEN_CAPTURE);
+                          stream->ca_dev_id.device, QNX_SND_PCM_STREAM_CAPTURE);
     if (result < 0) {
         TRACE_((THIS_FILE, "Failed to open capture device"));
         return PJMEDIA_EAUD_SYSERR;
@@ -700,38 +650,194 @@ static pj_status_t qnx_stream_get_cap(pjmedia_aud_stream *s,
 }
 
 
-pj_status_t qnx_audio_set_input_volume(snd_pcm_t *handle, unsigned volume)
+pj_status_t qnx_audio_set_input_volume(struct qnx_stream *handle)
 {
-    PJ_UNUSED_ARG(handle);
-    PJ_UNUSED_ARG(volume);
-    PJ_LOG(4, (__FILE__, "Stub: qnx_audio_set_input_volume"));
+    snd_mixer_t *mixer_handle = NULL;
+    snd_mixer_group_t group;
+    int rtn;
+
+    PJ_UNUSED_ARG(handle); // Mixer control is independent of PCM handle
+
+    // Open mixer using capture device ID
+    rtn = snd_mixer_open(&mixer_handle, handle->ca_dev_id.card, handle->ca_dev_id.device);
+    if (rtn < 0) {
+        PJ_LOG(1, (__FILE__, "Failed to open mixer: %s", snd_strerror(rtn)));
+        return PJ_EUNKNOWN;
+    }
+
+    // Read current mixer group settings
+    rtn = snd_mixer_group_read(mixer_handle, &group);
+    if (rtn < 0) {
+        PJ_LOG(1, (__FILE__, "snd_mixer_group_read failed: %s", snd_strerror(rtn)));
+        snd_mixer_close(mixer_handle);
+        return PJ_EUNKNOWN;
+    }
+
+    // Clamp input volume to valid range
+    if (handle->input_vol < (unsigned)group.min)
+        handle->input_vol = group.min;
+    if (handle->input_vol > (unsigned)group.max)
+        handle->input_vol = group.max;
+
+    // Set volume for input channels
+    if (group.channel_mask & SND_MIXER_CHN_MASK_FRONT_LEFT)
+        group.volume.names.front_left = handle->input_vol;
+    if (group.channel_mask & SND_MIXER_CHN_MASK_FRONT_RIGHT)
+        group.volume.names.front_right = handle->input_vol;
+    if (group.channel_mask & SND_MIXER_CHN_MASK_REAR_LEFT)
+        group.volume.names.rear_left = handle->input_vol;
+    if (group.channel_mask & SND_MIXER_CHN_MASK_REAR_RIGHT)
+        group.volume.names.rear_right = handle->input_vol;
+
+    // Write updated volume settings
+    rtn = snd_mixer_group_write(mixer_handle, &group);
+    snd_mixer_close(mixer_handle);
+    if (rtn < 0) {
+        PJ_LOG(1, (__FILE__, "snd_mixer_group_write failed: %s", snd_strerror(rtn)));
+        return PJ_EUNKNOWN;
+    }
+
     return PJ_SUCCESS;
 }
 
-pj_status_t qnx_audio_set_output_volume(snd_pcm_t *handle, unsigned volume)
+pj_status_t qnx_audio_set_output_volume(struct qnx_stream *handle)
 {
-    PJ_UNUSED_ARG(handle);
-    PJ_UNUSED_ARG(volume);
-    PJ_LOG(4, (__FILE__, "Stub: qnx_audio_set_output_volume"));
+    snd_mixer_t *mixer_handle = NULL;
+    snd_mixer_group_t group;
+    int rtn;
+
+    PJ_UNUSED_ARG(handle); // Mixer control is independent of PCM handle
+
+    // Open mixer using playback device ID
+    rtn = snd_mixer_open(&mixer_handle, handle->pb_dev_id.card, handle->pb_dev_id.device);
+    if (rtn < 0) {
+        PJ_LOG(1, (__FILE__, "Failed to open mixer: %s", snd_strerror(rtn)));
+        return PJ_EUNKNOWN;
+    }
+
+    // Read current mixer group settings
+    rtn = snd_mixer_group_read(mixer_handle, &group);
+    if (rtn < 0) {
+        PJ_LOG(1, (__FILE__, "snd_mixer_group_read failed: %s", snd_strerror(rtn)));
+        snd_mixer_close(mixer_handle);
+        return PJ_EUNKNOWN;
+    }
+
+    // Clamp output volume to valid range
+    if (handle->output_vol < (unsigned)group.min)
+        handle->output_vol = group.min;
+    if (handle->output_vol > (unsigned)group.max)
+        handle->output_vol = group.max;
+
+    // Set volume for all relevant output channels
+    if (group.channel_mask & SND_MIXER_CHN_MASK_FRONT_LEFT)
+        group.volume.names.front_left = handle->output_vol;
+    if (group.channel_mask & SND_MIXER_CHN_MASK_FRONT_RIGHT)
+        group.volume.names.front_right = handle->output_vol;
+    if (group.channel_mask & SND_MIXER_CHN_MASK_FRONT_CENTER)
+        group.volume.names.front_center = handle->output_vol;
+    if (group.channel_mask & SND_MIXER_CHN_MASK_REAR_LEFT)
+        group.volume.names.rear_left = handle->output_vol;
+    if (group.channel_mask & SND_MIXER_CHN_MASK_REAR_RIGHT)
+        group.volume.names.rear_right = handle->output_vol;
+    if (group.channel_mask & SND_MIXER_CHN_MASK_WOOFER)
+        group.volume.names.woofer = handle->output_vol;
+
+    // Write updated volume settings
+    rtn = snd_mixer_group_write(mixer_handle, &group);
+    snd_mixer_close(mixer_handle);
+    if (rtn < 0) {
+        PJ_LOG(1, (__FILE__, "snd_mixer_group_write failed: %s", snd_strerror(rtn)));
+        return PJ_EUNKNOWN;
+    }
+
     return PJ_SUCCESS;
 }
 
-pj_status_t qnx_audio_set_input_route(snd_pcm_t *handle, pjmedia_aud_dev_route route)
+pj_status_t qnx_audio_set_input_route(struct qnx_stream *handle)
 {
-    PJ_UNUSED_ARG(handle);
-    PJ_UNUSED_ARG(route);
-    PJ_LOG(4, (__FILE__, "Stub: qnx_audio_set_input_route"));
-    return PJ_SUCCESS;
+	snd_mixer_t *mixer_handle = NULL;
+	snd_mixer_group_t group;
+	int rtn;
+
+	PJ_UNUSED_ARG(handle); // Mixer control is independent of PCM handle
+
+	// Open mixer using capture device ID
+	rtn = snd_mixer_open(&mixer_handle, handle->ca_dev_id.card, handle->ca_dev_id.device);
+	if (rtn < 0) {
+		PJ_LOG(1, (__FILE__, "Failed to open mixer: %s", snd_strerror(rtn)));
+		return PJ_EUNKNOWN;
+	}
+
+	// Read current mixer group settings
+	rtn = snd_mixer_group_read(mixer_handle, &group);
+	if (rtn < 0) {
+		PJ_LOG(1, (__FILE__, "snd_mixer_group_read failed: %s", snd_strerror(rtn)));
+		snd_mixer_close(mixer_handle);
+		return PJ_EUNKNOWN;
+	}
+
+	// Set the input route using the gid (if applicable)
+	strncpy(group.gid.name, "Input Route", sizeof(group.gid.name) - 1);
+	// If we have to make Input Route name dynamic, add a field like input_route_name to qnx_stream
+	// and replace above line by uncommenting the following line
+	// strncpy(group.gid.name, handle->input_route_name, sizeof(group.gid.name) - 1);
+	group.gid.name[sizeof(group.gid.name) - 1] = '\0';
+	group.gid.index = 0; // or appropriate route index
+	group.gid.index  = handle->input_route; // Assuming pjmedia_aud_dev_route maps to index
+
+	// Write updated route settings
+	rtn = snd_mixer_group_write(mixer_handle, &group);
+	snd_mixer_close(mixer_handle);
+	if (rtn < 0) {
+		PJ_LOG(1, (__FILE__, "snd_mixer_group_write failed: %s", snd_strerror(rtn)));
+		return PJ_EUNKNOWN;
+	}
+
+	return PJ_SUCCESS;
 }
 
-pj_status_t qnx_audio_set_output_route(snd_pcm_t *handle, pjmedia_aud_dev_route route)
+pj_status_t qnx_audio_set_output_route(struct qnx_stream *handle)
 {
-    PJ_UNUSED_ARG(handle);
-    PJ_UNUSED_ARG(route);
-    PJ_LOG(4, (__FILE__, "Stub: qnx_audio_set_output_route"));
+    snd_mixer_t *mixer_handle = NULL;
+    snd_mixer_group_t group;
+    int rtn;
+
+    PJ_UNUSED_ARG(handle); // Mixer control is independent of PCM handle
+
+    // Open mixer using playback device ID
+    rtn = snd_mixer_open(&mixer_handle, handle->pb_dev_id.card, handle->pb_dev_id.device);
+    if (rtn < 0) {
+        PJ_LOG(1, (__FILE__, "Failed to open mixer: %s", snd_strerror(rtn)));
+        return PJ_EUNKNOWN;
+    }
+
+    // Read current mixer group settings
+    rtn = snd_mixer_group_read(mixer_handle, &group);
+    if (rtn < 0) {
+        PJ_LOG(1, (__FILE__, "snd_mixer_group_read failed: %s", snd_strerror(rtn)));
+        snd_mixer_close(mixer_handle);
+        return PJ_EUNKNOWN;
+    }
+
+	// Set the output route using gid.name and gid.index
+    strncpy(group.gid.name, "PCM Playback Volume", sizeof(group.gid.name) - 1);
+	// If we have to make mixer group name dynamic, add a field like output_route_name to qnx_stream
+	// and replace above line by uncommenting the following line
+	// strncpy(group.gid.name, handle->output_route_name, sizeof(group.gid.name) - 1);
+    group.gid.name[sizeof(group.gid.name) - 1] = '\0';
+    group.gid.index = 0; // or use handle->output_route if it maps to index
+
+    // Write updated route settings
+    rtn = snd_mixer_group_write(mixer_handle, &group);
+    snd_mixer_close(mixer_handle);
+    if (rtn < 0) {
+        PJ_LOG(1, (__FILE__, "snd_mixer_group_write failed: %s", snd_strerror(rtn)));
+        return PJ_EUNKNOWN;
+    }
+
     return PJ_SUCCESS;
 }
-
 
 
 /* API: set capability */
@@ -739,42 +845,43 @@ static pj_status_t qnx_stream_set_cap(pjmedia_aud_stream *strm,
                                       pjmedia_aud_dev_cap cap,
                                       const void *pval)
 {
-    struct qnx_stream *qnx_strm = (struct qnx_stream*)strm;
-    pj_status_t status = PJ_SUCCESS;
+	struct qnx_stream *qnx_strm = (struct qnx_stream*)strm;
+	pj_status_t status = PJ_SUCCESS;
 
-    PJ_ASSERT_RETURN(qnx_strm && pval, PJ_EINVAL);
+	
+	PJ_ASSERT_RETURN(qnx_strm && pval, PJ_EINVAL);
 
-    switch (cap) {
-    case PJMEDIA_AUD_DEV_CAP_INPUT_VOLUME_SETTING:
-        qnx_strm->input_vol = *(const unsigned*)pval;
-        // Apply volume setting to QNX audio input device
-        status = qnx_audio_set_input_volume(qnx_strm->pcm_handle, qnx_strm->input_vol);
-        break;
+	switch (cap) {
+	case PJMEDIA_AUD_DEV_CAP_INPUT_VOLUME_SETTING:
+		qnx_strm->input_vol = *(const unsigned*)pval;
+		// Apply volume setting to QNX audio input device
+		status = qnx_audio_set_input_volume(qnx_strm);
+		break;
 
-    case PJMEDIA_AUD_DEV_CAP_OUTPUT_VOLUME_SETTING:
-        qnx_strm->output_vol = *(const unsigned*)pval;
-        // Apply volume setting to QNX audio output device
-        status = qnx_audio_set_output_volume(qnx_strm->pcm_handle, qnx_strm->output_vol);
-        break;
+	case PJMEDIA_AUD_DEV_CAP_OUTPUT_VOLUME_SETTING:
+		qnx_strm->output_vol = *(const unsigned*)pval;
+		// Apply volume setting to QNX audio output device
+		status = qnx_audio_set_output_volume(qnx_strm);
+		break;
 
     case PJMEDIA_AUD_DEV_CAP_INPUT_ROUTE:
         qnx_strm->input_route = *(const pjmedia_aud_dev_route*)pval;
         // Apply input route if supported
-        status = qnx_audio_set_input_route(qnx_strm->pcm_handle, qnx_strm->input_route);
+        status = qnx_audio_set_input_route(qnx_strm);
         break;
 
     case PJMEDIA_AUD_DEV_CAP_OUTPUT_ROUTE:
         qnx_strm->output_route = *(const pjmedia_aud_dev_route*)pval;
         // Apply output route if supported
-        status = qnx_audio_set_output_route(qnx_strm->pcm_handle, qnx_strm->output_route);
+        status = qnx_audio_set_output_route(qnx_strm);
         break;
 
-    default:
-        status = PJMEDIA_EAUD_INVCAP;
-        break;
-    }
+	default:
+		status = PJMEDIA_EAUD_INVCAP;
+		break;
+	}
 
-    return status;
+	return status;
 }
 
 
