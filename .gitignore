@@ -1,4 +1,4 @@
-pjlib/include/pj/config_site.h
+*.log
 lib/
 bin/
 output/
